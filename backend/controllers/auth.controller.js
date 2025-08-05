@@ -4,7 +4,7 @@ import { generateVerificationCode } from "../utils/generateVerificationCode.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 
 export const Signup = async (req, res) => {
-  const { email, password, name } = req;
+  const { email, password, name } = req.body;
   try {
     if (!email || !password || !name) {
       throw new Error("All fields are required");
@@ -25,9 +25,6 @@ export const Signup = async (req, res) => {
       verificationTokenExpiry: Date.now() + 3600000,
     });
     await user.save();
-    res
-      .status(201)
-      .json({ success: true, message: "User created successfully" });
 
     // jwt
     generateTokenAndSetCookie(res, user._id);
