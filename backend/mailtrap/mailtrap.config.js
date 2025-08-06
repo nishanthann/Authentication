@@ -5,7 +5,7 @@ dotenv.config();
 
 const TOKEN = "874e2526913d46a570a46b1faceda0e4";
 
-export const client = new MailtrapClient({
+export const Client = new MailtrapClient({
   token: TOKEN,
 });
 
