@@ -8,27 +8,22 @@ import { Client, sender } from "./mailtrap.config.js";
 export const sendVerificationEmail = async (email, verificationToken) => {
   const recipient = [{ email }];
 
-  // ✅ Define the HTML content first
-  const html = VERIFICATION_EMAIL_TEMPLATE.replace(
-    /{verificationCode}/g,
-    verificationToken
-  );
-
-  // ✅ Optional: log for debugging
-  //   console.log("Generated HTML with token:", html);
-
   try {
     const response = await Client.send({
       from: sender,
       to: recipient,
       subject: "Verify your email",
-      html: html, // ✅ use the variable here
+      html: VERIFICATION_EMAIL_TEMPLATE.replace(
+        "{verificationCode}",
+        verificationToken
+      ),
       category: "Email Verification",
     });
 
     console.log("Email sent successfully", response);
   } catch (error) {
     console.error(`Error sending verification`, error);
+
     throw new Error(`Error sending verification email: ${error}`);
   }
 };
@@ -40,10 +35,18 @@ export const sendWelcomeEmail = async (email, name) => {
     const response = await Client.send({
       from: sender,
       to: recipient,
-      template_uuid: "e65925d1-a9d1-4a40-ae7c-d92b37d593df",
+      template_uuid: "28269624-4a9f-47f8-8384-d98a0511b2d1",
       template_variables: {
         company_info_name: "Auth Company",
         name: name,
+        company_info_address: "123 Main Street",
+        company_info_city: "Chennai",
+        company_info_zip_code: "600001",
+        company_info_country: "India",
+        user_name: name,
+        next_step_link: "https://yourapp.com/next",
+        get_started_link: "https://yourapp.com/start",
+        onboarding_video_link: "https://yourapp.com/video",
       },
     });
 
