@@ -40,6 +40,13 @@ const RedirectAuthenticatedUser = ({ children }) => {
   return children;
 };
 
+/**
+ * The root component of the React application, managing authentication state and routing.
+ *
+ * Triggers an authentication check on mount and displays a loading spinner while authentication status is being verified. Renders the main application UI with decorative floating shapes, toast notifications, and route definitions for dashboard, authentication, and utility pages. Access to routes is controlled based on user authentication and email verification status.
+ * 
+ * @returns {JSX.Element} The rendered application.
+ */
 function App() {
   const { isCheckingAuth, checkAuth } = useAuthStore();
 
