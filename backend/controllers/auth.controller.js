@@ -213,6 +213,7 @@ export const Logout = async (req, res) => {
 
 export const forgotPassword = async (req, res) => {
   const { email } = req.body;
+  console.log("Forgot password email received:", email);
   try {
     const user = await User.findOne({ email });
 
@@ -221,6 +222,11 @@ export const forgotPassword = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User not found" });
     }
+    // if (user.authProvider !== "local") {
+    //   return res.status(400).json({
+    //     message: "Password reset not available for social login accounts.",
+    //   });
+    // }
 
     // Generate reset token
     const resetToken = crypto.randomBytes(20).toString("hex");
@@ -235,7 +241,7 @@ export const forgotPassword = async (req, res) => {
     const mailOptions = {
       from: "nizhanth23@gmail.com",
       to: user.email,
-      subject: "Welcome to Our Platform!",
+      subject: "Password resetting",
       html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -313,7 +319,7 @@ export const resetPassword = async (req, res) => {
     const mailOptions = {
       from: "nizhanth23@gmail.com",
       to: user.email,
-      subject: "Welcome to Our Platform!",
+      subject: "Welcome to Back to Our Platform!",
       html: `
             <!DOCTYPE html>
             <html lang="en">

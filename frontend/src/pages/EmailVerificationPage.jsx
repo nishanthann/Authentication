@@ -9,7 +9,16 @@ const EmailVerificationPage = () => {
   const inputRefs = useRef([]);
   const navigate = useNavigate();
 
-  const { error, isLoading, verifyEmail } = useAuthStore();
+  const { error, isLoading, verifyEmail, clearError } = useAuthStore();
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        clearError(); // clear after 2 seconds
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   const handleChange = (index, value) => {
     const newCode = [...code];

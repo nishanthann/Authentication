@@ -1,4 +1,5 @@
 import { Check, X } from "lucide-react";
+import { useEffect } from "react";
 
 const PasswordCriteria = ({ password }) => {
   const criteria = [
@@ -27,7 +28,7 @@ const PasswordCriteria = ({ password }) => {
   );
 };
 
-const PasswordStrengthMeter = ({ password }) => {
+const PasswordStrengthMeter = ({ password, onStrengthChange }) => {
   const getStrength = (pass) => {
     let strength = 0;
     if (pass.length >= 6) strength++;
@@ -37,6 +38,13 @@ const PasswordStrengthMeter = ({ password }) => {
     return strength;
   };
   const strength = getStrength(password);
+
+  // Notify parent whenever strength changes
+  useEffect(() => {
+    if (onStrengthChange) {
+      onStrengthChange(strength);
+    }
+  }, [strength, onStrengthChange]);
 
   const getColor = (strength) => {
     if (strength === 0) return "bg-red-500";

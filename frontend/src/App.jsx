@@ -99,14 +99,7 @@ function App() {
           }
         />
         <Route path="/verify-email" element={<EmailVerificationPage />} />
-        <Route
-          path="/forgot-password"
-          element={
-            <RedirectAuthenticatedUser>
-              <ForgotPasswordPage />
-            </RedirectAuthenticatedUser>
-          }
-        />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         <Route
           path="/reset-password/:token"
