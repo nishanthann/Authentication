@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuthStore } from "../store/authStore";
 import Input from "../components/Input";
 import { ArrowLeft, Loader, Mail } from "lucide-react";
@@ -9,7 +9,15 @@ const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const { isLoading, forgotPassword } = useAuthStore();
+  const { isLoading, forgotPassword, error, clearError } = useAuthStore();
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        clearError(); // clear after 2 seconds
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -43,6 +51,9 @@ const ForgotPasswordPage = () => {
               onChange={(e) => setEmail(e.target.value)}
               required
             />
+            {error && (
+              <p className="text-red-500 font-semibold mb-2">{error}</p>
+            )}
             <motion.button
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}

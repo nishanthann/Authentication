@@ -4,6 +4,7 @@ import cors from "cors";
 
 import authRoutes from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+import "./configs/passport.js";
 
 import "dotenv/config";
 

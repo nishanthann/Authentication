@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import Input from "../components/Input";
 import { Loader, Lock, Mail, User } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PasswordStrengthMeter from "../components/PasswordStrengthMeter";
 import { useAuthStore } from "../store/authStore";
@@ -11,8 +11,18 @@ const SignUpPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const [passwordStrength, setPasswordStrength] = useState(0);
 
-  const { signup, error, isLoading } = useAuthStore();
+  const { signup, error, isLoading, clearError } = useAuthStore();
+
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        clearError(); // clear after 2 seconds
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [error, clearError]);
 
   const handleSignUp = async (e) => {
     e.preventDefault();
@@ -61,17 +71,22 @@ const SignUpPage = () => {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <p className="text-red-500 font-semibold mt-2">{error}</p>}
-          <PasswordStrengthMeter password={password} />
+          <PasswordStrengthMeter
+            password={password}
+            onStrengthChange={setPasswordStrength}
+          />
 
           <motion.button
-            className="mt-5 w-full py-3 px-4 bg-gradient-to-r from-cyan-500 to-teal-600 text-white 
-    font-bold rounded-lg shadow-lg hover:from-cyan-600
-    hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2
-    focus:ring-offset-gray-950 transition duration-200"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className={`mt-5 w-full py-3 px-4 font-bold rounded-lg shadow-lg transition duration-200
+              ${
+                passwordStrength < 2 || isLoading
+                  ? "bg-gray-600 cursor-not-allowed"
+                  : "bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-600 hover:to-teal-700 text-white"
+              }`}
+            whileHover={passwordStrength >= 3 ? { scale: 1.02 } : {}}
+            whileTap={passwordStrength >= 3 ? { scale: 0.98 } : {}}
             type="submit"
-            disabled={isLoading}
+            disabled={isLoading || passwordStrength < 2}
           >
             {isLoading ? (
               <Loader className=" animate-spin mx-auto" size={24} />
